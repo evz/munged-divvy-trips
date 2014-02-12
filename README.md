@@ -25,3 +25,27 @@ python scripts run.
 
 10. A CSV file containing a first stab at joining the trips table to the
 distance matrix
+
+SQL query for trips to distance join:
+
+``` sql
+    SELECT trip.trip_id, 
+        trip.starttime, 
+        trip.stoptime, 
+        trip.bikeid, 
+        trip.tripduration, 
+        trip.from_station_id, 
+        trip.from_station_name, 
+        trip.to_station_id, 
+        trip.to_station_name, 
+        trip.usertype, 
+        trip.gender, 
+        trip.birthyear, 
+        distance.station_start, 
+        distance.station_end, 
+        distance.distance_meters 
+    FROM trip 
+    JOIN distance ON from_station_id = station_start 
+        AND to_station_id = station_end 
+    ORDER BY distance.distance_meters DESC;
+```
