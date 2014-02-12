@@ -20,3 +20,8 @@ python scripts run.
 7. A GZipped CSV file with the raw trip data in it.
 
 8. A GZipped CSV file that has the cleaned up trip data in it.
+
+9. A CSV file containing a distance matrix between all stations (from @tothebeat)
+
+10. A CSV file containing a first stab at joining the trips table to the
+distance matrix
