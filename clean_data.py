@@ -1,9 +1,9 @@
 from csvkit.unicsv import UnicodeCSVReader, UnicodeCSVWriter
 
-def clean(fname):
-    f = open(fname, 'rb')
+def clean(f):
     reader = UnicodeCSVReader(f)
-    outp = []
+    good = []
+    bad = []
     header = reader.next()
     for row in reader:
         try:
@@ -13,13 +13,25 @@ def clean(fname):
             row[7] = int(row[7])
             row[4] = row[4].replace(',', '')
             if len(row) == 12:
-                outp.append(row)
+                good.append(row)
+            else:
+                bad.append(row)
         except (TypeError, ValueError):
-           print row
-    o = open('%s_cleaned.csv' % fname, 'wb')
-    writer = UnicodeCSVWriter(o)
-    writer.writerow(header)
-    writer.writerows(outp)
+           bad.append(row)
+    goodf = open('data/trips_cleaned.csv', 'wb')
+    badf = open('data/trips_dirty.csv', 'wb')
+    goodwriter = UnicodeCSVWriter(goodf)
+    goodwriter.writerow(header)
+    goodwriter.writerows(good)
+    badwriter = UnicodeCSVWriter(badf)
+    badwriter.writerow(header)
+    badwriter.writerows(bad)
+    goodf.close()
+    badf.close()
 
 if __name__ == "__main__":
-    clean('trips.csv')
+    import gzip
+    from cStringIO import StringIO
+    gz = open('data/trips_raw.csv.gz', 'rb')
+    with gzip.GzipFile(fileobj=gz) as f:
+        clean(f)
